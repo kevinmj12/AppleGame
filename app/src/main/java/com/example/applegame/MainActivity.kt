@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(
                     navController = navController,
-                    startDestination = AppleGameScreen.Main.name,
+                    startDestination = AppleGameScreen.Game.name,
                 ){
                     composable(route = AppleGameScreen.Main.name){
                         MainScreen(navController = navController)
