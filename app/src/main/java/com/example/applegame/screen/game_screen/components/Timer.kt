@@ -33,7 +33,7 @@ fun Timer(
     itemSize: Dp,
     gameOver: MutableState<Boolean>
 ) {
-    val initialTime = 10
+    val initialTime = 120
     var timeLeft by remember { mutableStateOf(initialTime) }  // 초기 타이머 값 설정
     val animationProgress = remember { Animatable(0f) }  // 애니메이션 진행 상태
 
