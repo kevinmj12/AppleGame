@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
                         MainScreen(navController = navController)
                     }
                     composable(route = AppleGameScreen.Game.name){
-                        GameScreen()
+                        GameScreen(navController = navController)
                     }
                     composable(route = AppleGameScreen.Score.name){
                         ScoreScreen()

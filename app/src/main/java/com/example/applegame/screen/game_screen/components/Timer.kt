@@ -5,14 +5,19 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,13 +29,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.applegame.AppleGameScreen
 import kotlinx.coroutines.delay
 
 @Composable
 fun Timer(
     columns: Int,
     itemSize: Dp,
-    gameOver: MutableState<Boolean>
+    gameOver: MutableState<Boolean>,
+    score: MutableIntState,
+    navController: NavController
 ) {
     val initialTime = 120
     var timeLeft by remember { mutableStateOf(initialTime) }  // 초기 타이머 값 설정
@@ -66,18 +75,29 @@ fun Timer(
     if (gameOver.value) {
         AlertDialog(
             onDismissRequest = {},
-            title = { Text("Game Over") },
-            text = { Text("Your game has ended!") },
+            title = { Text("게임 오버") },
+            text = { Text("스코어: ${score.intValue}") },
             confirmButton = {
                 Button(onClick = {
                     // 게임 종료 후 타이머 재설정
                     gameOver.value = false
                     timeLeft = initialTime
+                    score.intValue = 0
                 }) {
-                    Text("OK")
+                    Text("재시작")
                 }
             },
-            modifier = Modifier.padding(16.dp)
+            dismissButton = {
+                Button(onClick = {
+                    // 게임 종료 후 타이머 재설정
+                    gameOver.value = false
+                    navController.navigate(AppleGameScreen.Main.name)
+                }) {
+                    Text("메인으로")
+                }
+            },
+            modifier = Modifier.padding(16.dp),
+
         )
     }
 
@@ -89,13 +109,13 @@ fun Timer(
     }
 
     // 화면에 표시할 레이아웃
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
     ) {
         // 타이머 막대
         Canvas(modifier = Modifier
-            .size(width = itemSize * columns , height = 16.dp)
+            .size(width = itemSize * columns - 30.dp , height = 20.dp)
             ) {
             val width = size.width
             val height = size.height
@@ -119,6 +139,12 @@ fun Timer(
                 size = androidx.compose.ui.geometry.Size(barWidth, height)
             )
         }
+        Spacer(modifier = Modifier.width(16.dp)) // Text와 Canvas 사이 간격
+        Box(modifier = Modifier.size(30.dp, 20.dp)){
+            Text(text = score.intValue.toString())
+        }
+
+
     }
 }
 

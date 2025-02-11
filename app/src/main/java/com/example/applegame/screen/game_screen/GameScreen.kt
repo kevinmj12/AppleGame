@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,10 +27,11 @@ import kotlin.math.min
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.times
+import androidx.navigation.NavController
 import kotlin.random.Random
 
 @Composable
-fun GameScreen() {
+fun GameScreen(navController: NavController) {
     Scaffold(containerColor = Color.White) { innerPadding ->
         BoxWithConstraints(
             modifier = Modifier
@@ -42,8 +44,8 @@ fun GameScreen() {
             val rows = 9
             val padding: Dp = 16.dp
 
-            val screenWidth = maxWidth - (padding * 2)
-            val screenHeight = maxHeight - (padding * 4)
+            val screenWidth = maxWidth
+            val screenHeight = maxHeight - (padding + 20.dp)
             val itemSize: Dp = minOf(screenWidth / columns, screenHeight / rows)
 
             val appleStartY = (padding * 2) + (itemSize/2)
@@ -53,13 +55,14 @@ fun GameScreen() {
             val selectedApples = remember { mutableStateListOf<Int>() }
             val removedApples = remember { mutableStateListOf<Int>() }
             val gameOver = remember { mutableStateOf(false) }
+            var score = remember { mutableIntStateOf(0) }
 
             for (i: Int in 1..columns*rows){
                 appleValues.add(Random.nextInt(1, 10))
             }
 
             Column {
-                Timer(columns = columns, itemSize = itemSize, gameOver = gameOver)
+                Timer(columns = columns, itemSize = itemSize, gameOver = gameOver, navController=navController, score=score)
                 Apples(columns = columns, rows = rows, itemSize = itemSize,
                     appleValues = appleValues,
                     selectedApples = selectedApples,
@@ -121,7 +124,11 @@ fun GameScreen() {
                                             // 영역 내의 사과 합을 구해 10이 되면 제거
                                             val sumAppleValues = selectedApples.sumOf { appleValues[it] }
                                             if (sumAppleValues == 10) {
-                                                removedApples.addAll(selectedApples)
+                                                score.intValue += selectedApples.size
+                                                for (i: Int in 0..<selectedApples.size){
+                                                    removedApples.add(selectedApples[i])
+                                                    appleValues[selectedApples[i]] = 0
+                                                }
                                             }
                                             selectedApples.clear()
                                         }
