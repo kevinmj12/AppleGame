@@ -26,11 +26,10 @@ import kotlin.math.min
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.times
+import kotlin.random.Random
 
 @Composable
 fun GameScreen() {
-//    val density = LocalDensity.current.density // 밀도 정보
-
     Scaffold(containerColor = Color.White) { innerPadding ->
         BoxWithConstraints(
             modifier = Modifier
@@ -44,18 +43,28 @@ fun GameScreen() {
             val padding: Dp = 16.dp
 
             val screenWidth = maxWidth - (padding * 2)
-            val screenHeight = maxHeight - (padding * 3)
+            val screenHeight = maxHeight - (padding * 4)
             val itemSize: Dp = minOf(screenWidth / columns, screenHeight / rows)
 
-            val startY =  padding * 2 + (itemSize/2)
-            val startX = (maxWidth - (itemSize * columns))/2+(itemSize/2)
+            val appleStartY = (padding * 2) + (itemSize/2)
+            val appleStartX = (maxWidth - (itemSize * columns))/2+(itemSize/2)
 
+            val appleValues = remember { mutableStateListOf<Int>() }
             val selectedApples = remember { mutableStateListOf<Int>() }
+            val removedApples = remember { mutableStateListOf<Int>() }
             val gameOver = remember { mutableStateOf(false) }
+
+            for (i: Int in 1..columns*rows){
+                appleValues.add(Random.nextInt(1, 10))
+            }
 
             Column {
                 Timer(columns = columns, itemSize = itemSize, gameOver = gameOver)
-                Apples(columns = columns, rows = rows, itemSize = itemSize, selectedApples = selectedApples)
+                Apples(columns = columns, rows = rows, itemSize = itemSize,
+                    appleValues = appleValues,
+                    selectedApples = selectedApples,
+                    removedApples = removedApples
+                )
             }
 
             var startOffset by remember { mutableStateOf<Offset?>(null) }
@@ -69,7 +78,6 @@ fun GameScreen() {
                             while (true) {
                                 val down = awaitFirstDown()
 
-                                // startPosition을 픽셀(px)로 처리
                                 val startXDp = down.position.x.toDp()
                                 val startYDp = down.position.y.toDp()
 
@@ -98,8 +106,8 @@ fun GameScreen() {
                                                 for (col in 0 until columns) {
                                                     val appleId = row * columns + col
 
-                                                    val appleY = (startY + (row * itemSize))
-                                                    val appleX = (startX + (col * itemSize))
+                                                    val appleY = appleStartY + (row * (itemSize))
+                                                    val appleX = appleStartX + (col * (itemSize))
 
                                                     if (appleX in left..right && appleY in top..bottom) {
                                                         selectedApples.add(appleId)
@@ -110,6 +118,11 @@ fun GameScreen() {
                                             startOffset = null
                                             endOffset = null
                                             isDragging = false
+                                            // 영역 내의 사과 합을 구해 10이 되면 제거
+                                            val sumAppleValues = selectedApples.sumOf { appleValues[it] }
+                                            if (sumAppleValues == 10) {
+                                                removedApples.addAll(selectedApples)
+                                            }
                                             selectedApples.clear()
                                         }
                                     }

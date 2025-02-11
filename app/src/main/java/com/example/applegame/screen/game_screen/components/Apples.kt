@@ -15,23 +15,27 @@ fun Apples(
     columns: Int,
     rows: Int,
     itemSize: Dp,
+    appleValues: List<Int>,
     selectedApples: List<Int>,
+    removedApples: List<Int>,
 ) {
     var appleId = 0
 
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .padding(top=5.dp),
-        verticalArrangement = Arrangement.SpaceBetween
+            .padding(top=16.dp),
+//        verticalArrangement = Arrangement.SpaceBetween
     ) {
         repeat(rows) {
             Row(
-                horizontalArrangement = Arrangement.SpaceBetween
+//                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 repeat(columns) {
-                    Apple(itemSize = itemSize, isSelected = selectedApples.contains(appleId))
-
+                    Apple(itemSize = itemSize,
+                        isSelected = selectedApples.contains(appleId),
+                        isRemoved = removedApples.contains(appleId),
+                        value = appleValues[appleId])
                     appleId++
                 }
             }

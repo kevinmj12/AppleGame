@@ -27,31 +27,33 @@ data class AppleItem(
 fun Apple(
     itemSize: Dp,
     isSelected: Boolean,
+    isRemoved: Boolean,
+    value: Int
 ) {
-    val imageModifier = Modifier.size(itemSize)
     val imageRes = if (isSelected) R.drawable.apple_selected else R.drawable.apple
 
     Box(modifier = Modifier.size(itemSize)) {
-        Box{
-            // 이미지 배경
-            Image(
-                painter = painterResource(id = imageRes), // 이미지 리소스
-                contentDescription = "apple",
-                modifier = imageModifier
-            )
+        if (!isRemoved){
+            Box{
+                // 이미지 배경
+                Image(
+                    painter = painterResource(id = imageRes), // 이미지 리소스
+                    contentDescription = "apple",
+                )
 
-            // 숫자 텍스트
-            Text(
-                text = "1", // 표시할 숫자
-                color = Color.White, // 텍스트 색상
-                style = androidx.compose.ui.text.TextStyle(
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold
-                ), // 텍스트 스타일
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .offset(y = itemSize / 15)
-            )
+                // 숫자 텍스트
+                Text(
+                    text = value.toString(), // 표시할 숫자
+                    color = Color.White, // 텍스트 색상
+                    style = androidx.compose.ui.text.TextStyle(
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold
+                    ), // 텍스트 스타일
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .offset(y = itemSize / 15)
+                )
+            }
         }
     }
 }
