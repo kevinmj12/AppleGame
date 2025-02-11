@@ -29,7 +29,6 @@ import kotlinx.coroutines.delay
 @Composable
 fun Timer(
     columns: Int,
-    imagePadding: Dp,
     itemSize: Dp,
     gameOver: MutableState<Boolean>
 ) {
@@ -96,7 +95,7 @@ fun Timer(
     ) {
         // 타이머 막대
         Canvas(modifier = Modifier
-            .size(width = itemSize * columns + imagePadding * (columns - 1), height = 16.dp)
+            .size(width = itemSize * columns , height = 16.dp)
             ) {
             val width = size.width
             val height = size.height
