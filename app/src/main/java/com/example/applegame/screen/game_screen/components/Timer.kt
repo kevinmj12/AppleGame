@@ -115,7 +115,7 @@ fun Timer(
     ) {
         // 타이머 막대
         Canvas(modifier = Modifier
-            .size(width = itemSize * columns - 30.dp , height = 20.dp)
+            .size(width = itemSize * columns - 30.dp , height = 16.dp)
             ) {
             val width = size.width
             val height = size.height
@@ -140,7 +140,7 @@ fun Timer(
             )
         }
         Spacer(modifier = Modifier.width(16.dp)) // Text와 Canvas 사이 간격
-        Box(modifier = Modifier.size(30.dp, 20.dp)){
+        Box(modifier = Modifier.size(30.dp, 23.dp)){
             Text(text = score.intValue.toString())
         }
 

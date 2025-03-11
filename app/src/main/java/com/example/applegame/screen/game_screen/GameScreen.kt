@@ -1,5 +1,6 @@
 package com.example.applegame.screen.game_screen
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -30,9 +31,11 @@ import androidx.compose.ui.unit.times
 import androidx.navigation.NavController
 import kotlin.random.Random
 
+@SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun GameScreen(navController: NavController) {
-    Scaffold(containerColor = Color.White) { innerPadding ->
+    Scaffold(containerColor = Color.White) {
+        innerPadding ->
         BoxWithConstraints(
             modifier = Modifier
                 .padding(innerPadding)
@@ -45,11 +48,11 @@ fun GameScreen(navController: NavController) {
             val padding: Dp = 16.dp
 
             val screenWidth = maxWidth
-            val screenHeight = maxHeight - (padding + 20.dp)
+            val screenHeight = maxHeight - (16.dp + 23.dp)
             val itemSize: Dp = minOf(screenWidth / columns, screenHeight / rows)
 
-            val appleStartY = (padding * 2) + (itemSize/2)
-            val appleStartX = (maxWidth - (itemSize * columns))/2+(itemSize/2)
+            val appleStartY = (padding + 23.dp) + (itemSize/2)
+            val appleStartX = (maxWidth - (itemSize * columns))/2 + (itemSize/10*3)
 
             val appleValues = remember { mutableStateListOf<Int>() }
             val selectedApples = remember { mutableStateListOf<Int>() }
